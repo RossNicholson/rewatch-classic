@@ -768,8 +768,12 @@ function rewatch_CreateButton(spellName, playerId, btnIcon, relative)
 		button:SetAttribute("*type1", "macro"); button:SetAttribute("*macrotext1", "/stopcasting\n/cast "..rewatch_loc["naturesswiftness"].."\n/stopcasting\n/cast [target=mouseover] "..rewatch_loc["nourish"]);
 		button:SetAttribute("type2", "macro"); button:SetAttribute("macrotext2", "/stopcasting\n/cast "..rewatch_loc["naturesswiftness"].."\n/stopcasting\n/cast [target=mouseover] "..rewatch_loc["nourish"]);
 	elseif(spellName == rewatch_loc["removecorruption"]) then
+		-- Use mouseover targeting for Remove Corruption
+		button:SetAttribute("*type1", "macro"); button:SetAttribute("*macrotext1", "/stopcasting\n/cast [@mouseover,exists,help] "..rewatch_loc["removecorruption"].."; "..rewatch_loc["removecorruption"]);
 		button:SetAlpha(0.2);
 	elseif(spellName == rewatch_loc["naturescure"]) then
+		-- Use mouseover targeting for Nature's Cure
+		button:SetAttribute("*type1", "macro"); button:SetAttribute("*macrotext1", "/stopcasting\n/cast [@mouseover,exists,help] "..rewatch_loc["naturescure"].."; "..rewatch_loc["naturescure"]);
 		button:SetAlpha(0.2);
 	end;
 	-- apply tooltip support
