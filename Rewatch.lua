@@ -1694,11 +1694,13 @@ rewatch_events:SetScript("OnEvent", function(self, event, ...)
 						if(val and val["PlayerBar"] and val["PlayerBar"].roleIcon) then
 							local roleIcon = val["PlayerBar"].roleIcon;
 							local role = UnitGroupRolesAssigned(unitToken);
+							-- Use the same texture and TexCoord method as initial creation
+							roleIcon:SetTexture("Interface\\LFGFRAME\\UI-LFG-ICON-PORTRAITROLES");
 							if(role == "TANK") then 
-								roleIcon:SetTexture("Interface\\AddOns\\Rewatch\\Textures\\tank.tga"); 
+								roleIcon:SetTexCoord(0, 19/64, 22/64, 41/64);
 								roleIcon:Show();
 							elseif(role == "HEALER") then 
-								roleIcon:SetTexture("Interface\\AddOns\\Rewatch\\Textures\\healer.tga"); 
+								roleIcon:SetTexCoord(20/64, 39/64, 1/64, 20/64);
 								roleIcon:Show();
 							else 
 								roleIcon:Hide(); 
