@@ -126,4 +126,8 @@ For issues, questions, or to report bugs:
 
 ## License
 
-All rights reserved. This is an adaptation of the original Rewatch addon for Mists of Pandaria Classic compatibility.
+All rights reserved.
+
+**Please give full credit when you want to redistribute or modify this addon!**
+
+Original authors and credits are preserved in the source files. This is an adaptation of the original Rewatch addon for Mists of Pandaria Classic compatibility.
