@@ -1763,13 +1763,30 @@ rewatch_events:SetScript("OnEvent", function(self, event, ...)
 			-- get the player position, or if -1, return
 			playerId = rewatch_GetPlayer(targetName);
 			if(playerId < 0) then return; end;
-			-- get the debuff type
-			_, _, _, _, debuffType = UnitDebuff(targetName, spell);
+			val = rewatch_bars[playerId];
+			if(not val or not val["Player"]) then return; end;
+			-- get the debuff type - UnitDebuff requires a unit token, not a player name
+			-- Use the stored unit token from rewatch_bars
+			local unitToken = val["Player"];
+			-- Find the debuff by spell name using index-based iteration
+			local debuffType = nil;
+			local index = 1;
+			while true do
+				local name, icon, count, debuffTypeFromAPI, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId = UnitDebuff(unitToken, index);
+				if not name then break; end;
+				if name == spell then
+					debuffType = debuffTypeFromAPI;
+					break;
+				end;
+				index = index + 1;
+			end;
 			-- process it
-			if((debuffType == "Curse") or (debuffType == "Poison") or (debuffType == "Magic" and rewatch_loadInt["InRestoSpec"])) then
+			if(debuffType and ((debuffType == "Curse") or (debuffType == "Poison") or (debuffType == "Magic" and rewatch_loadInt["InRestoSpec"]))) then
 				rewatch_bars[playerId]["Corruption"] = spell; rewatch_bars[playerId]["CorruptionType"] = debuffType;
 				if(rewatch_loadInt["ShowButtons"] == 1) then
-					rewatch_bars[playerId]["RemoveCorruptionButton"]:SetAlpha(1);
+					if(rewatch_bars[playerId]["RemoveCorruptionButton"]) then
+						rewatch_bars[playerId]["RemoveCorruptionButton"]:SetAlpha(1);
+					end;
 				end;
 				rewatch_SetFrameBG(playerId);
 			end;
