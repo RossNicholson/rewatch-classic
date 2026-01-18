@@ -1,6 +1,10 @@
-==Macro's==
+==Macros==
 
-The macro's below work on the intended target when your mouse hovers an ally. If you're not hovering anyone, or an enemy, it will cast the spell normally.
+**Rewatch Classic - MoP Classic Edition**
+
+The macros below work on the intended target when your mouse hovers an ally. If you're not hovering anyone, or an enemy, it will cast the spell normally.
+
+These macros work perfectly with Rewatch player frames - just hover over a player frame and use your keybound macro!
 
 ===Lifebloom macro===
 <pre>

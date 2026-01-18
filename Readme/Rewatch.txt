@@ -1,18 +1,32 @@
-==Rewatch==
+==Rewatch Classic (MoP Classic Edition)==
 ===Summary===
 Rewatch is an addon to help you monitor your healing-over-time (HoT) spells as a druid. There's an easy main window which you can move around, which will contain six bars for every target; a healthbar, energy-/rage-/manabar, lifebloom bar, rejuvenation bar, regrowth bar and a wild growth bar. Simply click a spell bar to cast that spell on that specific player and watch the clicked bar channel down as the corresponding HoT spell runs out.
 
 Party- and raidhealing has never been so easy!
 
-===Important notes===
+**This version is specifically adapted for Mists of Pandaria Classic (client version 5.5.3.64857+).**
+
+===Important Notes===
+* '''For MoP Classic installation:'''
+** Extract to: `World of Warcraft\_classic_\Interface\AddOns\` (Windows) or `World of Warcraft/_classic_/Interface/AddOns/` (Mac)
 * '''If you're updating from a version prior 5.4, delete these files ''first'':
 ** World of Warcraft/WTF/Account/'''accountname'''/SavedVariables/Rewatch.*
 ** World of Warcraft/Interface/AddOns/Rewatch/*
 * '''Highly recommended usage with ''/cast [target=mouseover, exists, help] Lifebloom; Lifebloom'' macro!
-* '''Check this page for the macro's I use: http://wow.curseforge.com/projects/rewatch/pages/macros/
+* '''Check the Macros.txt file for recommended macros, or visit: https://github.com/RossNicholson/rewatch-classic
+* '''This is an independently maintained MoP Classic adaptation. For bugs/issues, visit: https://github.com/RossNicholson/rewatch-classic/issues
 
 ==Installation==
-Just extract this entire folder to your World of Warcraft/Interface/AddOns/ folder and run the game. By default, this AddOn will be enabled on every character. No need to disable it for your non-druid classes by the way; it will not load on these characters so you won't have to bother about that.
+**For Mists of Pandaria Classic:**
+
+1. Download the latest release from: https://github.com/RossNicholson/rewatch-classic/releases
+2. Extract the `Rewatch` folder to your WoW Classic addons directory:
+   - **Windows**: `World of Warcraft\_classic_\Interface\AddOns\`
+   - **Mac**: `World of Warcraft/_classic_/Interface/AddOns/`
+3. Launch World of Warcraft Classic and log in to your druid character
+4. The Rewatch frame will appear in the center of your screen - click and drag it to your desired location
+
+By default, this AddOn will be enabled on every character. No need to disable it for your non-druid classes - it will not load on these characters so you won't have to bother about that.
 
 ==Usage==
 ===Launch===
@@ -36,7 +50,7 @@ Manually adding players is allowed through the '''/rewatch add [_target||<name>]
 
 All of the important spells, right at a single click away. Told you it was easy!
 
-For those that prefer mouse-over macro's, these work on the Rewatch player frames as well. Just mouse-over the playerframe of the player you want to heal, and hit the keybind to your mouse-over macro. You can find these macro's here: http://wow.curseforge.com/projects/rewatch/pages/macros/. I definitely recommend using this!
+For those that prefer mouse-over macros, these work on the Rewatch player frames as well. Just mouse-over the playerframe of the player you want to heal, and hit the keybind to your mouse-over macro. You can find recommended macros in the `Readme/Macros.txt` file included with this addon, or visit: https://github.com/RossNicholson/rewatch-classic. I definitely recommend using this!
 
 ===Options===
 You can adjust the AddOn to fit your needs in the options menu, accessible through the command '''/rewatch options''' or '''Esc > Interface > AddOns > Rewatch'''. Note that these options are not processed live; you will have to click '''Okay''' to save and confirm changes before they have effect. That means if you click '''Cancel''', all options will revert back. Exception to this are the bars- and framecolors, these are directly processed and have no undo feature.
@@ -53,21 +67,24 @@ You can adjust the AddOn to fit your needs in the options menu, accessible throu
 * Limit the total number of frames in your Rewatch frame by using '''/rewatch maxPlayers [number]'''.
 * Rightclick, shift-click, ctrl-click or alt-click a spellbar or -button to cast Nature's Swiftness in addition to the spell.
 * Rightclick the main Rewatch frame to (un)lock it.
-* Try some preset layouts using '''/rewatch layout'''. My favourite is Minimalist!
+* Try some preset layouts using '''/rewatch layout'''. My favourite is Minimalist! Note: MoP Classic version forces vertical stacking for better compatibility.
 * In the Highlighting options, add some aura's you need to be careful of. I'll fill this list myself over time by raiding, please feel free to contribute!
-* Try vertical layout instead of the default layout, something else!
+* This MoP Classic version uses vertical layout by default for better compatibility with MoP Classic 5.5.3.64857+.
 * Change the alt, shift and ctrl-click modifier macro's on the HP bar in the options to anything you'd like! (by default Nature's Cure, (Combat) Rez and Innervate, resp.)
+* Type '''/rewatch default''' to reset layout settings to defaults (vertical stacking).
 
 ==FAQ==
 ===Basic===
 ====Q: How can I see the number Lifebloom stacked?====
-A: Lifebloom stacks are indicated by colors. There's a configurable color for the Lifebloom bar if you have 1 stacked, 2 stacked or 3 stacked!
+A: Lifebloom stacks are indicated by colors. There's a configurable color for the Lifebloom bar if you have 1 stacked, 2 stacked or 3 stacked! The bar color will automatically change based on the stack count (1, 2, or 3 stacks).
 ====Q: Where is the Rewatch AddOn? I can't find it!====
-A: Check if you have extracted it in the World of Warcraft/Interface/AddOns folder. If it still won't show up, make sure you log on your druid! ;)
+A: Check if you have extracted it in the `World of Warcraft\_classic_\Interface\AddOns\` folder (Windows) or `World of Warcraft/_classic_/Interface/AddOns/` folder (Mac). If it still won't show up, make sure you're playing Mists of Pandaria Classic and log on your druid! ;)
 ====Q: Where can I adjust some settings?====
-It's in the general WoW settings, Esc > Interface > AddOns > Rewatch.
-====Q: Rewatch looks strange, how can I reset it to it's defaults?====
-A: You can use the options menu to set it to it's default, but this won't likely solve your issue. You've probably updated from a previous version and forgot to remove some old configuration files. Exit WoW, delete all World of Warcraft/WTF/Account/'''accountname'''/SavedVariables/Rewatch.* files and load up WoW again. That should do it.
+A: It's in the general WoW settings, Esc > Interface > AddOns > Rewatch, or type `/rewatch options` or `/rew options` (shortcut).
+====Q: How do I reset Rewatch to default layout?====
+A: Type `/rewatch default` to reset layout settings to defaults. You can also use the options menu, but if you're experiencing issues, you've probably updated from a previous version and forgot to remove old configuration files. Exit WoW, delete all `World of Warcraft\_classic_\WTF\Account\'''accountname'''\SavedVariables\Rewatch.*` files and load up WoW again. That should do it.
+====Q: Can I change the layout from horizontal to vertical?====
+A: This version of Rewatch Classic is configured to always stack players vertically (NumFramesWide = 1) for better MoP Classic compatibility. Use `/rewatch default` to reset to the default vertical layout.
 
 ===Problems===
 ====Q: Why do I get an error when trying to re-sort the list in the WoW UI panel?====
@@ -75,9 +92,25 @@ A: This error occurs if you disabled the auto-adjust to group feature. Resorting
 ====Q: It doesn't automatically put players on my Rewatch list anymore! Why?====
 A: Because you told Rewatch you don't want it to. You probably removed a player from the list by right-clicking his/her healthbar and clicking '''Remove player''', which automatically turns the auto-update feature of Rewatch off. Since if it wouldn't, then Rewatch will sooner or later detect this player in your party but not in the list, and will add it again. Turn the auto-update feature back on in the rewatch options menu, or through '''/rewatch autogroup 1'''.
 
-==Creditz==
-Written by Coen van der Wel, main character Dezine on Argent Dawn, Europe, 2008-2013.
+==Credits==
 
-Thanks to Hee-seon (Korean), Thomas Friedrich (German), Didier ''Silvio'' Carmin (French) and Jkon @ Tyrande (Spanish) for the localizations!
+===Original Rewatch Addon===
+**Written by:** Coen van der Wel, main character Dezine on Argent Dawn, Europe, 2008-2013.
 
-Special thanks to bobn64 for his maintenance on this AddOn while I was gone!
+**Thanks to:**
+- Hee-seon (Korean), Thomas Friedrich (German), Didier "Silvio" Carmin (French) and Jkon @ Tyrande (Spanish) for the localizations!
+- bobn64 for his maintenance on this AddOn while the original author was gone!
+
+**Original Repository:** https://github.com/coenvdwel/rewatch  
+**Original CurseForge:** https://www.curseforge.com/wow/addons/rewatch
+
+===Rewatch Classic (MoP Classic Adaptation)===
+**MoP Classic Adaptation:** RossNicholson
+
+This is an independently maintained adaptation for Mists of Pandaria Classic (client version 5.5.3.64857+). It is not an official release by the original author(s).
+
+**GitHub Repository:** https://github.com/RossNicholson/rewatch-classic  
+**Issues/Bugs:** https://github.com/RossNicholson/rewatch-classic/issues  
+**Releases:** https://github.com/RossNicholson/rewatch-classic/releases
+
+For full credits and license information, see `CREDITS.md` and `LICENSE` files in the addon directory.

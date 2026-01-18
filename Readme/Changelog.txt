@@ -1,11 +1,34 @@
 ==Revisions==
-===Last version===
-Last version: 50507 at 24-09-2013
 
-Bugs or suggestions can be posted to the Rewatch addon page at http://www.curse.com/addons/wow/rewatch
+===Current Version===
+**v1.0.0-mop-classic** (January 2026) - MoP Classic compatibility update
+
+===Original Baseline===
+**v50507** (24-09-2013) - Last original version before MoP Classic adaptation
+
+Bugs or suggestions for the MoP Classic adaptation can be posted to: https://github.com/RossNicholson/rewatch-classic/issues
+
+Original addon page: https://www.curseforge.com/wow/addons/rewatch
 
 ===Changelog===
-====50507====
+
+====v1.0.0-mop-classic (January 2026) - MoP Classic Compatibility Update====
+* Updated for Mists of Pandaria Classic client version 5.5.3.64857
+* Fixed SetBackdrop compatibility (added BackdropTemplate for all frames)
+* Updated UI templates (replaced OptionsButtonTemplate with UIPanelButtonTemplate, OptionsCheckButtonTemplate with UICheckButtonTemplate)
+* Fixed GetSpecialization compatibility (added fallback to GetPrimaryTalentTree for MoP Classic)
+* Fixed CombatLog event handling for MoP Classic API (updated to use CombatLogGetCurrentEventInfo)
+* Fixed UnitBuff usage (implemented index-based iteration for MoP Classic compatibility)
+* Fixed CooldownFrame_SetTimer compatibility (updated to use SetCooldown method)
+* Fixed combat lockdown issues with Hide() calls on status bars
+* Added proper InCombatLockdown() checks throughout (boolean check for MoP Classic)
+* Improved Lifebloom stack detection and color display (uses count from UnitBuff)
+* Enhanced Regrowth Lifebloom refresh detection (triggers on SPELL_HEAL events)
+* Force vertical stacking of player frames (NumFramesWide = 1)
+* Added /rewatch default command to reset layout settings
+* Improved error handling and initialization order
+
+====50507 (24-09-2013) - Original Baseline====
 * Coloring player names with class colors, removed class sidebar
 * Frame shadow which will color with aggro, moving from the player names color
 * Chat messages from Rewatch are now in white, to avoid confusion with raid chat
@@ -136,8 +159,10 @@ Bugs or suggestions can be posted to the Rewatch addon page at http://www.curse.
 * Minor code efficiency updates
 * Added option to hide tooltips
 
-==Full changelog==
-You can see the full changelog at http://wow.curseforge.com/projects/rewatch/pages/changelog/.
+==Full Changelog==
+You can see the full original changelog at https://www.curseforge.com/wow/addons/rewatch
+
+For MoP Classic adaptation updates, see: https://github.com/RossNicholson/rewatch-classic/releases
 
 ==Planned features==
 * None at this time!
@@ -146,5 +171,6 @@ You can see the full changelog at http://wow.curseforge.com/projects/rewatch/pag
 * Button for Symbiosis?
 * Bar highlighting when Clearcasting (Regrowth and Healing Touch)
 
-==Known bugs==
-* Several translations into DE, ES and FR are not implemented yet
+==Known Issues==
+* Several translations into DE, ES and FR are not fully implemented (inherited from baseline)
+* MoP Classic specific: Some deprecated API functions may require future updates as the client evolves
