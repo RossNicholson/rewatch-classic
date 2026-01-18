@@ -125,8 +125,12 @@ For issues, questions, or to report bugs:
 
 ## Releases
 
+- **[v1.1.1](https://github.com/RossNicholson/rewatch-classic/releases/tag/v1.1.1)**: Latest release - Additional bug fixes (role icons, Nature's Cure button)
+- **[v1.1.0](https://github.com/RossNicholson/rewatch-classic/releases/tag/v1.1.0)**: Bug fixes release (combat lockdown, threat/role updates)
 - **[v1.0.0-mop-classic](https://github.com/RossNicholson/rewatch-classic/releases/tag/v1.0.0-mop-classic)**: First working release for MoP Classic 5.5.3
 - **[baseline-50507](https://github.com/RossNicholson/rewatch-classic/releases/tag/baseline-50507)**: Original unmodified version from CurseForge
+
+See [Releases](https://github.com/RossNicholson/rewatch-classic/releases) for all versions and download links.
 
 ## Additional Resources
 

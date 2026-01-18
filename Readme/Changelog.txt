@@ -1,6 +1,10 @@
 ==Revisions==
 
 ===Current Version===
+**v1.1.1** (January 2026) - Latest release with bug fixes and improvements
+
+===Previous Versions===
+**v1.1.0** (January 2026) - Bug fixes release  
 **v1.0.0-mop-classic** (January 2026) - MoP Classic compatibility update
 
 ===Original Baseline===
@@ -10,7 +14,42 @@ Bugs or suggestions for the MoP Classic adaptation can be posted to: https://git
 
 Original addon page: https://www.curseforge.com/wow/addons/rewatch
 
+For latest releases, see: https://github.com/RossNicholson/rewatch-classic/releases
+
 ===Changelog===
+
+====v1.1.1 (January 2026) - Additional Bug Fixes====
+* Fixed tank/healer role icon display consistency
+  - Role icons now use consistent Blizzard UI texture with TexCoord for both initial creation and updates
+  - Fixed issue where role icons would display incorrectly when roles were assigned
+* Fixed Nature's Cure/Remove Corruption button functionality
+  - Changed from unit-based spell casting to mouseover macro targeting
+  - Now uses [@mouseover,exists,help] macro syntax for better MoP Classic compatibility
+  - Falls back to normal casting if not hovering over a player
+* Fixed Nature's Cure/Remove Corruption button not lighting up for debuffs
+  - Fixed UnitDebuff call to use unit token instead of player name
+  - Added index-based iteration to find debuffs by spell name (MoP Classic compatibility)
+  - Enhanced debuff detection with spell ID matching when available
+  - Added periodic check in OnUpdate loop to scan all players for cleanseable debuffs
+  - Button now correctly lights up when player has curse, poison, or magic debuffs (if resto spec)
+  - Button dims when debuffs are removed
+* Removed outdated testing report (all documented issues resolved)
+
+====v1.1.0 (January 2026) - Bug Fixes Release====
+* Fixed InCombatLockdown() checks for MoP Classic compatibility (12 locations)
+  - Changed all InCombatLockdown() == 1 to InCombatLockdown() (boolean check)
+  - Changed all InCombatLockdown() ~= 1 to not InCombatLockdown()
+  - Combat lockdown protection now works correctly in MoP Classic
+* Fixed UNIT_THREAT_SITUATION_UPDATE handler
+  - Event passes unit token (like "player", "party1") not a GUID
+  - Now correctly iterates through player frames to find matching unit tokens
+  - Threat colors now display correctly on player frames
+* Fixed PLAYER_ROLES_ASSIGNED handler
+  - Event fires without parameters in MoP Classic
+  - Now correctly iterates through all group/raid members
+  - Role icons (tank/healer) now update correctly when roles are assigned
+* Added roleIcon storage on PlayerBar for proper role icon updates
+* Added unit validation in findUnitBuff function to prevent errors with invalid units
 
 ====v1.0.0-mop-classic (January 2026) - MoP Classic Compatibility Update====
 * Updated for Mists of Pandaria Classic client version 5.5.3.64857
