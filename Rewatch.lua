@@ -1768,21 +1768,42 @@ rewatch_events:SetScript("OnEvent", function(self, event, ...)
 			-- get the debuff type - UnitDebuff requires a unit token, not a player name
 			-- Use the stored unit token from rewatch_bars
 			local unitToken = val["Player"];
-			-- Find the debuff by spell name using index-based iteration
-			local debuffType = nil;
+			-- Check all debuffs on the player, not just match by name (name might differ due to localization)
+			-- Use spell ID if available, otherwise check all cleanseable debuffs
+			local foundDebuff = nil;
+			local foundDebuffType = nil;
+			local foundDebuffName = nil;
 			local index = 1;
 			while true do
-				local name, icon, count, debuffTypeFromAPI, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId = UnitDebuff(unitToken, index);
+				local name, icon, count, debuffTypeFromAPI, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellIdFromAPI = UnitDebuff(unitToken, index);
 				if not name then break; end;
-				if name == spell then
-					debuffType = debuffTypeFromAPI;
+				-- Try to match by spell ID first (most reliable), then by name
+				if(spellId and spellIdFromAPI and spellId == spellIdFromAPI) then
+					foundDebuff = true;
+					foundDebuffType = debuffTypeFromAPI;
+					foundDebuffName = name;
 					break;
+				elseif(name == spell) then
+					foundDebuff = true;
+					foundDebuffType = debuffTypeFromAPI;
+					foundDebuffName = name;
+					break;
+				elseif(not spellId) then
+					-- If we don't have a spell ID, check if this is any cleanseable debuff
+					if((debuffTypeFromAPI == "Curse") or (debuffTypeFromAPI == "Poison") or (debuffTypeFromAPI == "Magic" and rewatch_loadInt["InRestoSpec"])) then
+						-- Use the first cleanseable debuff found if we don't have a specific match
+						if(not foundDebuff) then
+							foundDebuff = true;
+							foundDebuffType = debuffTypeFromAPI;
+							foundDebuffName = name;
+						end;
+					end;
 				end;
 				index = index + 1;
 			end;
 			-- process it
-			if(debuffType and ((debuffType == "Curse") or (debuffType == "Poison") or (debuffType == "Magic" and rewatch_loadInt["InRestoSpec"]))) then
-				rewatch_bars[playerId]["Corruption"] = spell; rewatch_bars[playerId]["CorruptionType"] = debuffType;
+			if(foundDebuff and foundDebuffType and ((foundDebuffType == "Curse") or (foundDebuffType == "Poison") or (foundDebuffType == "Magic" and rewatch_loadInt["InRestoSpec"]))) then
+				rewatch_bars[playerId]["Corruption"] = foundDebuffName or spell; rewatch_bars[playerId]["CorruptionType"] = foundDebuffType;
 				if(rewatch_loadInt["ShowButtons"] == 1) then
 					if(rewatch_bars[playerId]["RemoveCorruptionButton"]) then
 						rewatch_bars[playerId]["RemoveCorruptionButton"]:SetAlpha(1);
@@ -1983,6 +2004,48 @@ rewatch_events:SetScript("OnUpdate", function()
 					end;
 					-- else, unit's dead and processed, ignore him now
 				else
+					-- Check for cleanseable debuffs on this player (periodic check)
+					-- Check periodically to catch debuffs that might have been missed by combat log
+					if(rewatch_loadInt["ShowButtons"] == 1 and val["RemoveCorruptionButton"]) then
+						local unitToken = val["Player"];
+						if(unitToken and UnitExists(unitToken)) then
+							local hasCleanseableDebuff = false;
+							local debuffName = nil;
+							local debuffType = nil;
+							local index = 1;
+							-- Check all debuffs on the player
+							while true do
+								local name, icon, count, debuffTypeCheck, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellIdCheck = UnitDebuff(unitToken, index);
+								if not name then break; end;
+								if((debuffTypeCheck == "Curse") or (debuffTypeCheck == "Poison") or (debuffTypeCheck == "Magic" and rewatch_loadInt["InRestoSpec"])) then
+									hasCleanseableDebuff = true;
+									if(not debuffName) then
+										debuffName = name;
+										debuffType = debuffTypeCheck;
+									end;
+								end;
+								index = index + 1;
+							end;
+							-- Update button state
+							if(hasCleanseableDebuff) then
+								-- Only update if it changed to avoid unnecessary work
+								if(not val["Corruption"] or val["Corruption"] ~= debuffName) then
+									val["Corruption"] = debuffName;
+									val["CorruptionType"] = debuffType;
+									val["RemoveCorruptionButton"]:SetAlpha(1);
+									rewatch_SetFrameBG(i);
+								end;
+							else
+								-- No cleanseable debuff found - dim the button if it's currently lit
+								if(val["Corruption"]) then
+									val["Corruption"] = nil;
+									val["CorruptionType"] = nil;
+									val["RemoveCorruptionButton"]:SetAlpha(0.2);
+									rewatch_SetFrameBG(i);
+								end;
+							end;
+						end;
+					end;
 					-- get and set health data
 					a, b = UnitHealthMax(val["Player"]), UnitHealth(val["Player"]);
 					val["PlayerBar"]:SetMinMaxValues(0, a); val["PlayerBar"]:SetValue(b);
