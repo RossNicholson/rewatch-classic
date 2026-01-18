@@ -21,6 +21,14 @@ Rewatch is a powerful addon designed to help Druid healers monitor their healing
 - **Customizable Interface**: Adjustable layouts, colors, and display options
 - **Combat-Safe**: Proper handling of protected functions during combat
 
+## ☕ Support the Developer
+
+If this addon has helped you, please consider buying me a coffee! 🙏
+
+[Buy Me a Coffee](https://www.buymeacoffee.com/rossnicholson)
+
+---
+
 ## Installation
 
 1. Download the latest release from the [Releases page](https://github.com/RossNicholson/rewatch-classic/releases)
