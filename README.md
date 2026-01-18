@@ -5,6 +5,16 @@ A **Mists of Pandaria Classic** adaptation of the **Rewatch** World of Warcraft 
 [![Latest Release](https://img.shields.io/github/v/release/RossNicholson/rewatch-classic?label=Latest%20Release)](https://github.com/RossNicholson/rewatch-classic/releases/latest)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+<div align="center">
+
+## ☕ Support the Developer
+
+If this addon has helped you, please consider [buying me a coffee](https://buymeacoffee.com/rossnicholson)! 🙏
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-Support%20Ross-yellow?logo=buy-me-a-coffee)](https://buymeacoffee.com/rossnicholson)
+
+</div>
+
 ## Overview
 
 Rewatch is a powerful addon designed to help Druid healers monitor their healing-over-time (HoT) spells with ease. The addon provides an intuitive interface with individual tracking bars for each group or raid member, allowing you to quickly see the status of Lifebloom, Rejuvenation, Regrowth, and Wild Growth effects. Simply click a spell bar to cast that spell on the corresponding player, and watch the timer count down as the HoT expires.
@@ -20,14 +30,6 @@ Rewatch is a powerful addon designed to help Druid healers monitor their healing
 - **Smart Group Management**: Automatically adds/removes players as your group composition changes
 - **Customizable Interface**: Adjustable layouts, colors, and display options
 - **Combat-Safe**: Proper handling of protected functions during combat
-
-## ☕ Support the Developer
-
-If this addon has helped you, please consider buying me a coffee! 🙏
-
-[Buy Me a Coffee](https://www.buymeacoffee.com/rossnicholson)
-
----
 
 ## Installation
 
