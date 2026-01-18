@@ -3,7 +3,7 @@
 A **Mists of Pandaria Classic** adaptation of the **Rewatch** World of Warcraft addon.
 
 [![Latest Release](https://img.shields.io/github/v/release/RossNicholson/rewatch-classic?label=Latest%20Release)](https://github.com/RossNicholson/rewatch-classic/releases/latest)
-[![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Overview
 
@@ -126,8 +126,6 @@ For issues, questions, or to report bugs:
 
 ## License
 
-All rights reserved.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-**Please give full credit when you want to redistribute or modify this addon!**
-
-Original authors and credits are preserved in the source files. This is an adaptation of the original Rewatch addon for Mists of Pandaria Classic compatibility.
+This is an adaptation of the original Rewatch addon for Mists of Pandaria Classic compatibility. Original Rewatch addon copyright (c) 2008-2013 Coen van der Wel (Dezine), all rights reserved. Original authors and credits are preserved in the source files and [CREDITS.md](CREDITS.md).
