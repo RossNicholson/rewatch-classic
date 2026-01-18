@@ -30,6 +30,11 @@ end;
 -- Helper function to find a buff by name (for MoP Classic compatibility)
 -- In MoP Classic, UnitBuff requires an index, so we need to search through buffs
 local function findUnitBuff(unit, spellName, filter)
+	-- Validate unit parameter
+	if(not unit or not UnitExists(unit)) then
+		return nil;
+	end;
+	
 	-- Try the new API first (MoP Classic supports UnitBuff with name as second parameter in some cases)
 	-- But if that fails, loop through buffs
 	local index = 1;
@@ -594,7 +599,7 @@ end;
 -- return: void
 function rewatch_SnapToGrid(frame)
 	-- return if in combat
-	if(InCombatLockdown() == 1) then return -1; end;
+	if(InCombatLockdown()) then return -1; end;
 	
 	-- get parent frame
 	local parent = frame:GetParent();
@@ -979,7 +984,7 @@ end;
 -- return: the index number the player has been assigned
 function rewatch_AddPlayer(player, pet)
 	-- return if in combat or if the max amount of players is passed
-	if((InCombatLockdown() == 1) or ((rewatch_loadInt["MaxPlayers"] > 0) and (rewatch_loadInt["MaxPlayers"] < rewatch_f:GetNumChildren()))) then return -1; end;
+	if(InCombatLockdown() or ((rewatch_loadInt["MaxPlayers"] > 0) and (rewatch_loadInt["MaxPlayers"] < rewatch_f:GetNumChildren()))) then return -1; end;
 	
 	-- process pets
 	if(pet) then
@@ -1075,6 +1080,8 @@ function rewatch_AddPlayer(player, pet)
 	else
 		roleIcon:Hide();
 	end;
+	-- Store roleIcon for later access
+	statusbar.roleIcon = roleIcon;
 	
 	-- energy/mana/rage bar
 	local statusbar2 = CreateFrame("STATUSBAR", nil, frame, "TextStatusBar");
@@ -1185,7 +1192,7 @@ end;
 -- return: void
 -- PRE: Called by specific user request
 function rewatch_HidePlayerByName(player)
-	if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+	if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 	else
 		-- get the index of this player
 		local playerId = rewatch_GetPlayer(player);
@@ -1341,7 +1348,7 @@ function rewatch_SlashCommandHandler(cmd)
 			end;
 		-- if the user wants to add a player manually
 		elseif(string.lower(commands[1]) == "add") then
-			if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+			if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 			elseif(commands[2]) then
 				if(rewatch_GetPlayer(commands[2]) < 0) then
 					if(rewatch_InGroup(commands[2])) then rewatch_AddPlayer(commands[2], nil);
@@ -1357,7 +1364,7 @@ function rewatch_SlashCommandHandler(cmd)
 			if(rewatch_loadInt["AutoGroup"] == 0) then
 				rewatch_Message(rewatch_loc["nosort"]);
 			else
-				if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+				if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 				else
 					rewatch_Clear();
 					rewatch_changed = true;
@@ -1366,13 +1373,13 @@ function rewatch_SlashCommandHandler(cmd)
 			end;
 		-- if the user wants to clear the player list
 		elseif(string.lower(commands[1]) == "clear") then
-			if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+			if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 			else rewatch_Clear(); rewatch_Message(rewatch_loc["cleared"]); end;
 		elseif(string.lower(commands[1]) == "layout") then
 			rewatch_Layout(false);
 		-- reset to default layout
 		elseif(string.lower(commands[1]) == "default") then
-			if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+			if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 			else
 				rewatch_Clear();
 				rewatch_load["Layout"] = "default";
@@ -1389,7 +1396,7 @@ function rewatch_SlashCommandHandler(cmd)
 			end;
 		-- add test players for testing without a group
 		elseif(string.lower(commands[1]) == "test") then
-			if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+			if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 			else
 				rewatch_Clear();
 				local testPlayers = {"TestTank", "TestHealer", "TestDPS1", "TestDPS2", "TestDPS3"};
@@ -1625,7 +1632,7 @@ rewatch_events:SetScript("OnEvent", function(self, event, ...)
 		for i=1, NUM_GLYPH_SLOTS do
 			if(select(6, GetGlyphSocketInfo(i)) == 434) then rewatch_loadInt["HasBlooming"] = true; end;
 		end;
-		if(InCombatLockdown() == 1) then rewatch_Message(rewatch_loc["combatfailed"]);
+		if(InCombatLockdown()) then rewatch_Message(rewatch_loc["combatfailed"]);
 		else rewatch_Clear(); end;
 		rewatch_changed = true;
 	-- party changed
@@ -1633,39 +1640,72 @@ rewatch_events:SetScript("OnEvent", function(self, event, ...)
 		rewatch_changed = true;
 	-- update threat
 	elseif(event == "UNIT_THREAT_SITUATION_UPDATE") then
-		local unitGUID = ...;
-		if(unitGUID) then
-			playerId = rewatch_GetPlayer(UnitName(unitGUID));
-			if(playerId < 0) then return; end;
-			val = rewatch_bars[playerId];
-			if(val["UnitGUID"]) then
-				a = UnitThreatSituation(val["Player"]);
-				if(a == nil or a == 0) then 
-					if(val["Border"] and val["Border"].SetBackdropBorderColor) then
-						local success, err = pcall(val["Border"].SetBackdropBorderColor, val["Border"], 0, 0, 0, 1);
+		-- UNIT_THREAT_SITUATION_UPDATE passes a unit token (like "player", "target", "party1"), not a GUID
+		local unitToken = ...;
+		if(unitToken) then
+			-- Find the player frame that matches this unit token
+			for i=1, rewatch_i-1 do
+				val = rewatch_bars[i];
+				if(val and val["Player"]) then
+					-- Check if this unit token matches our stored player unit
+					if(val["Player"] == unitToken or (UnitGUID(val["Player"]) and UnitGUID(unitToken) == UnitGUID(val["Player"]))) then
+						a = UnitThreatSituation(unitToken);
+						if(a == nil or a == 0) then 
+							if(val["Border"] and val["Border"].SetBackdropBorderColor) then
+								local success, err = pcall(val["Border"].SetBackdropBorderColor, val["Border"], 0, 0, 0, 1);
+							end;
+							if(val["Border"]) then val["Border"]:SetFrameStrata("HIGH"); end;
+						else 
+							r, g, b = GetThreatStatusColor(a); 
+							if(val["Border"] and val["Border"].SetBackdropBorderColor) then
+								local success, err = pcall(val["Border"].SetBackdropBorderColor, val["Border"], r, g, b, 1);
+							end;
+							if(val["Border"]) then val["Border"]:SetFrameStrata("DIALOG"); end;
+						end;
+						break;
 					end;
-					val["Border"]:SetFrameStrata("HIGH");
-				else 
-					r, g, b = GetThreatStatusColor(a); 
-					if(val["Border"] and val["Border"].SetBackdropBorderColor) then
-						local success, err = pcall(val["Border"].SetBackdropBorderColor, val["Border"], r, g, b, 1);
-					end;
-					val["Border"]:SetFrameStrata("DIALOG"); 
 				end;
 			end;
 		end;
 	-- changed role
+	-- PLAYER_ROLES_ASSIGNED fires without parameters when roles are assigned
+	-- We need to update all group members' role icons
 	elseif(event == "PLAYER_ROLES_ASSIGNED") then
-		local unitGUID = ...;
-		if(unitGUID) then
-			playerId = rewatch_GetPlayer(UnitName(unitGUID));
-			if(playerId < 0) then return; end;
-			val = rewatch_bars[playerId];
-			if(val["UnitGUID"]) then
-				local role = UnitGroupRolesAssigned(UnitName(unitGUID));
-				if(role == "TANK") then roleIcon:SetTexture("Interface\\AddOns\\Rewatch\\Textures\\tank.tga"); roleIcon:Show();
-				elseif(role == "HEALER") then roleIcon:SetTexture("Interface\\AddOns\\Rewatch\\Textures\\healer.tga"); roleIcon:Show();
-				else roleIcon:Hide(); end;
+		-- Iterate through all group members and update their role icons
+		local numGroupMembers = IsInRaid() and GetNumGroupMembers() or (GetNumSubgroupMembers() + 1);
+		for i=1, numGroupMembers do
+			local unitToken;
+			if(IsInRaid()) then
+				unitToken = "raid"..i;
+			else
+				if(i == numGroupMembers) then
+					unitToken = "player";
+				else
+					unitToken = "party"..i;
+				end;
+			end;
+			
+			if(unitToken and UnitExists(unitToken)) then
+				local playerName = UnitName(unitToken);
+				if(playerName) then
+					playerId = rewatch_GetPlayer(playerName);
+					if(playerId > 0) then
+						val = rewatch_bars[playerId];
+						if(val and val["PlayerBar"] and val["PlayerBar"].roleIcon) then
+							local roleIcon = val["PlayerBar"].roleIcon;
+							local role = UnitGroupRolesAssigned(unitToken);
+							if(role == "TANK") then 
+								roleIcon:SetTexture("Interface\\AddOns\\Rewatch\\Textures\\tank.tga"); 
+								roleIcon:Show();
+							elseif(role == "HEALER") then 
+								roleIcon:SetTexture("Interface\\AddOns\\Rewatch\\Textures\\healer.tga"); 
+								roleIcon:Show();
+							else 
+								roleIcon:Hide(); 
+							end;
+						end;
+					end;
+				end;
 			end;
 		end;
 	-- Handle combat log events
@@ -1877,7 +1917,7 @@ rewatch_events:SetScript("OnUpdate", function()
 		-- if the group formation has been changed, add new group members to the list
 		if(rewatch_changed) then
 			if(rewatch_loadInt["AutoGroup"] == 1) then
-				if(InCombatLockdown() ~= 1) then
+				if(not InCombatLockdown()) then
 					if((GetNumGroupMembers() == 0 and IsInRaid()) or (GetNumSubgroupMembers() == 0 and not IsInRaid())) then rewatch_Clear(); end;
 					rewatch_ProcessGroup(); rewatch_changed = nil;
 				end;

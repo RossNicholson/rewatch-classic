@@ -314,7 +314,7 @@ function rewatch_CreateOptions()
 	rewatch_options.okay = function(self)
 		rewatch_OptionsFromData(false);
 		if(rewatch_changedDimentions) then
-			if(InCombatLockdown() == 1) then
+			if(InCombatLockdown()) then
 				rewatch_changed = true;
 				rewatch_changedDimentions = false;
 				rewatch_Message(rewatch_loc["combatfailed"]);
@@ -540,7 +540,7 @@ function rewatch_OptionsFromData(get)
 		end;
 	end;
 	-- apply changes
-	if((not get) and (InCombatLockdown() ~= 1)) then
+	if((not get) and (not InCombatLockdown())) then
 		rewatch_UpdateOffset();
 		rewatch_gcd:SetAlpha(rewatch_loadInt["GcdAlpha"]);
 		if(((rewatch_i == 2) and (rewatch_loadInt["HideSolo"] == 1)) or (rewatch_loadInt["Hide"] == 1)) then rewatch_f:Hide(); else rewatch_ShowFrame(); end;
