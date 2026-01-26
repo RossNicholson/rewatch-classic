@@ -1,0 +1,12 @@
+# CurseForge automatic packaging (GitHub sync)
+# https://support.curseforge.com/en/support/solutions/articles/9000197281-automatic-packaging
+
+package-as: Rewatch
+
+manual-changelog: Readme/Changelog.txt
+
+license-output: LICENSE
+
+ignore:
+  - .git
+  - .github

@@ -132,6 +132,22 @@ For issues, questions, or to report bugs:
 
 See [Releases](https://github.com/RossNicholson/rewatch-classic/releases) for all versions and download links.
 
+### CurseForge sync
+
+Releases can sync automatically from GitHub to CurseForge. The repo includes a `pkgmeta.yaml` so the CurseForge packager builds the addon correctly (output folder `Rewatch`, changelog from `Readme/Changelog.txt`, etc.).
+
+**One-time setup:**
+
+1. **CurseForge**: Link the project to this repo (Source repository in project settings) if not already done.
+2. **CurseForge API token**: [Create a token](https://www.curseforge.com/account/api-tokens) (e.g. named "Webhooks").
+3. **GitHub webhook**: In the repo, go to **Settings → Webhooks → Add webhook**:
+   - **Payload URL**: `https://www.curseforge.com/api/projects/{projectID}/package?token={token}`
+   - Replace `{projectID}` with your CurseForge project ID (project **Overview → About This Project**).
+   - Replace `{token}` with the API token from step 2.
+   - Leave other options as default, then **Add webhook**.
+
+After that, pushing a **tag** (e.g. `v1.2.0`) triggers packaging. The resulting zip is uploaded to CurseForge as a new file. Tags containing `alpha` or `beta` are marked as Alpha/Beta; others as Release.
+
 ## Additional Resources
 
 - Original addon documentation can be found in the `Readme/` directory
