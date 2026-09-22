@@ -328,29 +328,33 @@ function rewatch_CreateOptions()
 	end;
 	rewatch_options.cancel = function(self) rewatch_OptionsFromData(true); end;
 	rewatch_options.default = function(self) rewatch_version, rewatch_load = nil, nil; rewatch_loadInt["Loaded"] = false; end;
-	-- add panels (safe wrapper for MoP Classic compatibility)
-	-- Only register if InterfaceOptions_AddCategory exists
-	-- Panels will still work via InterfaceOptionsFrame_OpenToCategory which is used by /rewatch options
-	if(InterfaceOptions_AddCategory) then
+	-- the Settings panel (MoP Classic 5.5+) calls OnCommit/OnDefault/OnRefresh instead of okay/default/cancel
+	rewatch_options.OnCommit = rewatch_options.okay;
+	rewatch_options.OnDefault = rewatch_options.default;
+	rewatch_options.OnRefresh = function(self) rewatch_OptionsFromData(true); end;
+	-- add panels
+	if(Settings and Settings.RegisterCanvasLayoutCategory) then
+		rewatch_optionsCategory = Settings.RegisterCanvasLayoutCategory(rewatch_options, rewatch_options.name);
+		Settings.RegisterCanvasLayoutSubcategory(rewatch_optionsCategory, rewatch_options2, rewatch_options2.name);
+		Settings.RegisterCanvasLayoutSubcategory(rewatch_optionsCategory, rewatch_options3, rewatch_options3.name);
+		Settings.RegisterCanvasLayoutSubcategory(rewatch_optionsCategory, rewatch_options4, rewatch_options4.name);
+		Settings.RegisterAddOnCategory(rewatch_optionsCategory);
+	elseif(InterfaceOptions_AddCategory) then
 		InterfaceOptions_AddCategory(rewatch_options);
 		InterfaceOptions_AddCategory(rewatch_options2);
 		InterfaceOptions_AddCategory(rewatch_options3);
 		InterfaceOptions_AddCategory(rewatch_options4);
-	else
-		-- In MoP Classic, InterfaceOptions_AddCategory may not exist
-		-- Panels are still accessible via /rewatch options command which uses InterfaceOptionsFrame_OpenToCategory
-		-- Try to register when Blizzard_InterfaceOptions loads
-		local hookFrame = CreateFrame("Frame");
-		hookFrame:RegisterEvent("ADDON_LOADED");
-		hookFrame:SetScript("OnEvent", function(self, event, addonName)
-			if(addonName == "Blizzard_InterfaceOptions" and InterfaceOptions_AddCategory) then
-				InterfaceOptions_AddCategory(rewatch_options);
-				InterfaceOptions_AddCategory(rewatch_options2);
-				InterfaceOptions_AddCategory(rewatch_options3);
-				InterfaceOptions_AddCategory(rewatch_options4);
-				self:UnregisterEvent("ADDON_LOADED");
-			end;
-		end);
+	end;
+end;
+
+-- opens the options panel, using the Settings API when available
+-- return: void
+function rewatch_OpenOptions()
+	rewatch_CreateOptions();
+	if(rewatch_optionsCategory and Settings and Settings.OpenToCategory) then
+		Settings.OpenToCategory(rewatch_optionsCategory:GetID());
+	elseif(InterfaceOptionsFrame_OpenToCategory) then
+		InterfaceOptionsFrame_OpenToCategory("Rewatch");
 	end;
 end;
 

@@ -1496,7 +1496,7 @@ function rewatch_SlashCommandHandler(cmd)
 		-- if the user wants to toggle the settings GUI
 		elseif(string.lower(commands[1]) == "options") then
 			rewatch_changedDimentions = false;
-			InterfaceOptionsFrame_OpenToCategory("Rewatch");
+			rewatch_OpenOptions();
 		-- if the user wants something else (unsupported)
 		elseif(string.len(commands[1]) > 0) then rewatch_Message(rewatch_loc["invalid_command"]);
 		else rewatch_Message(rewatch_loc["credits"]); end;
